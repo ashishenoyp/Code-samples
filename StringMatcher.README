@@ -1,0 +1,118 @@
+String Matching
+Problem overview
+Prefix and exact string matching has several applications. A common one is matching URLs
+to a configuration or selecting an outbound route for an ip pattern. The goal of the assignment
+is to design a performant library to map a string of [a-zA-Z]+ to a positive integer value.
+
+Functional requirements
+1. An exact match, “abc” in the example below, will match only “abc”.
+2. A prefix match, “fas” in the example below, will match anything that begins with “fas”
+(“fast” in the example).
+3. An exact match takes preference over prefix match.
+4. In cases of multiple matches, the longest match takes preference.
+5. String comparison is case-sensitive.
+6. Value -1 is used to denote the lack of a match.
+
+Coding guidelines
+1. You MUST not use any external library including the STL libraries to implement this
+module. Usage of any std:: classes is prohibited. Using functions in glibc (strlen,
+strcpy, strcmp etc) is OK.
+2. You MUST implement the headers provided below.
+3. You may use libraries from C99, for example printf, malloc etc.
+
+Prioritization
+Before you begin, you should prioritize what you want to do based on the guidelines below in
+descending order of priority.
+1. Your code MUST compile.
+2. You must complete the defined functionality.
+3. The implementation needs to handle large number of requests per second and large
+number of objects.
+4. Your code has to be readable.
+
+Please remember you submission will be judged based on the prioritization defined above.
+
+Implementation Header
+You task is to design and implement a library that implements the class definition below.StringMatcher.h
+
+#ifndef STRINGMATCHER_H
+#define STRINGMATCHER_H
+/// Header for a class that manages the mapping between a
+/// string of alphabets and an id.
+class StringMatcher
+{
+public:
+/// Constructor/Destructor
+StringMatcher();
+~StringMatcher();
+/// Add an exact string match, i.e. “abc” in
+/// the documentation above. Adding an exact match for an
+/// existing `exact_str` will overwrite the previous `id`.
+/// @param exact_str string to match with the id.
+/// @param id (>=0) that is mapped to this string.
+void add_exact_match(const char* exact_str, int id);
+/// Add a prefix string match i.e. “fas” in
+/// the documentation above. Adding a prefix match for an
+/// existing `prefix_str` will overwrite the previous `id`.
+/// @param prefix_str to match with the id.
+/// @param id (>=0) that is mapped to this string.
+void add_prefix_match(const char* prefix_str, int id);
+/// Get the id for the specified string.
+/// @param input to lookup the id for
+/// @returns -1 if there is no match or the id
+int lookup(const char* input) const;
+/// Delete the exact matches for the given string, i.e. if we have
+/// an add_exact_match(“str”, 2), delete_exact_match will remove the
+/// match of “str” to 2.
+/// @param exact_str exact match to delete.
+/// @return true if a match was deleted.
+bool delete_exact_match(const char* exact_str);
+/// Delete the prefix matches for the given string, i.e. if we have
+/// a add_prefix_match(“str”, 2), delete_prefix_match will remove the
+/// match of “str” to 2.
+/// @param prefix_str prefix match to delete.
+/// @return true if a match was deleted.
+bool delete_prefix_match(const char* prefix_str);
+};
+#endif // 
+
+
+
+STRINGMATCHER_HExample Unit Test
+#include "StringMatcher.h"
+#include <stdio.h>
+#include <assert.h>
+int
+main(int argc, char **argv)
+{
+// Basic exact match
+{
+StringMatcher matcher;
+assert(matcher.add_exact_match("contactus", 1));
+assert(matcher.lookup("contactus") == 1);
+}
+// Basic prefix test
+{
+StringMatcher matcher;
+assert(matcher.add_prefix_match("img", 1));
+assert(matcher.lookup("imgcutepuppy") == 1);
+assert(matcher.lookup("htmlcutepuppy") == -1);
+}
+// Basic longest match test
+{
+StringMatcher matcher;
+assert(matcher.add_prefix_match("img", 1));
+assert(matcher.add_prefix_match("imghd", 2));
+assert(matcher.lookup("imgcutepuppy") == 1);
+assert(matcher.lookup("imghdcutepuppy") == 2);
+}
+return 0;
+}
+Example
+add_exact_match(“abc”, 908);
+add_prefix_match(“fas”, 907);
+add_prefix_match(“abc”, 901);
+lookup(“abc”); // returns 908 -- exact match preferred over prefix match
+lookup(“fast”); // returns 907
+delete_exact_match(“abc”); // returns true
+lookup(“abcd”); // returns 901
+delete_prefix_match(“abc”); // returns true
