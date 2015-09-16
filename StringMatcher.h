@@ -1,3 +1,7 @@
+// --------------------------------------------
+// AUTHOR: Ashish Shenoy (ashishenoyp@gmail.com)
+// --------------------------------------------
+
 #ifndef STRINGMATCHER_H
 #define STRINGMATCHER_H
 
