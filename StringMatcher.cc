@@ -1,3 +1,7 @@
+// --------------------------------------------
+// AUTHOR: Ashish Shenoy (ashishenoyp@gmail.com)
+// --------------------------------------------
+
 #include "StringMatcher.h"
 #include <stdlib.h>
 #include <assert.h>
