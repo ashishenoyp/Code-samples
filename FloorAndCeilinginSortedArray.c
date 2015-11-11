@@ -7,6 +7,7 @@ void func(int *arr, int l, int r, int x, int *floor, int *ceil) {
         if (arr[mid] == x ) {
             *floor = arr[mid];
             *ceil = arr[mid];
+            return;
         } else if (arr[mid] < x) {
             *floor = arr[mid];
             func(arr, mid +1, r, x, floor, ceil);
